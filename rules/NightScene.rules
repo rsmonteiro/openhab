@@ -1,0 +1,13 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+		
+rule "PowerOffAtNightPowernode"
+when 
+	/* kijk op de powernode1 of alles uit staat (<20 watt) */
+	Time cron "0 0 21 * * ?" 
+then 
+		if(Power_Powernode1.state < 20) {
+			sendCommand(Switch_Powernode1, OFF)
+		}
+end

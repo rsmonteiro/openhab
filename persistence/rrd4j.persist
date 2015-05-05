@@ -1,0 +1,12 @@
+Strategies {
+	everyDay : "0 0 0 * * ?"
+	everyHour : "0 0 * * * ?"
+	everyMinute : "0 * * * * ?"
+}
+
+Items {
+	* : strategy = everyChange, restoreOnStartup
+	Power_* : strategy = everyMinute
+	Gas_* : strategy = everyMinute
+	Energy_* : strategy = everyMinute
+}

@@ -1,0 +1,58 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.joda.time.*
+
+rule "Energy Aggregate Calculation"
+	when 
+		Time cron "0 */10 * * * ?"  // every 10 minutes
+	then
+		var Number dToday = Energy_HighSmartmeter_Delivered.deltaSince(now.toDateMidnight, "mysql") as DecimalType
+		var Number dTodayLow = Energy_LowSmartmeter_Delivered.deltaSince(now.toDateMidnight, "mysql") as DecimalType
+		var Number dNow = Energy_TodaySmartmeter_Delivered.state as DecimalType
+		dToday = dToday + dTodayLow
+		
+		//This means a new day, so copy the value to the yesterday item
+		if(dToday < dNow) 
+		{
+			postUpdate(Energy_YesterdaySmartmeter_Delivered, dNow)
+		}
+			
+		postUpdate(Energy_TodaySmartmeter_Delivered, dToday)
+
+		//produced is disabled since we're not producing yet
+		var Number pToday = 0 //Energy_HighSmartmeter_Produced.deltaSince(now.toDateMidnight, "mysql") as DecimalType
+		var Number pTodayLow = 0 //Energy_LowSmartmeter_Produced.deltaSince(now.toDateMidnight, "mysql") as DecimalType
+		var Number pNow = Energy_TodaySmartmeter_Produced.state as DecimalType
+		pToday = pToday + pTodayLow
+
+		//This means a new day, so copy the value to the yesterday item
+		if(pToday < pNow) 
+		{
+			postUpdate(Energy_YesterdaySmartmeter_Produced, pNow)
+		}
+			
+		postUpdate(Energy_TodaySmartmeter_Produced, pToday)
+
+		logInfo("Energy Aggregate Calculation", "Aggregate calculated delivered: "+dToday+" kWh, produced: "+pToday+" kWh ")
+	end
+
+	
+rule "Gas Daily Aggregate Calculation"
+	when
+		Time cron "0 */10 * * * ?"  // every 10  minutes
+	then
+		var Number gasToday = Gas_Smartmeter.deltaSince(now.toDateMidnight, "mysql") as DecimalType 
+		var Number gasNow = Gas_TodaySmartmeter_Delivered.state as DecimalType
+		
+		//This means a new day, so copy the value to the yesterday item
+		if(gasToday < gasNow) 
+		{
+			postUpdate(Gas_YesterdaySmartmeter_Delivered, gasNow)
+		}
+		
+		postUpdate(Gas_TodaySmartmeter_Delivered, gasToday)
+
+		logInfo("Gas Aggregate Calculation", "Aggregate calculated gas: " + gasToday + " m3")
+	end
+end

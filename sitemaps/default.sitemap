@@ -1,0 +1,36 @@
+sitemap default label="Irisvallei 12"
+{
+	Frame {
+		Text label="Floors" icon="house" {
+			Group item=gSecondFloor label="Second Floor" icon="attic"
+			Group item=gFirstFloor label="First Floor" icon="firstfloor"
+			Group item=gGroundFloor label="Ground Floor" icon="groundfloor"
+			Group item=gUtility label="Utility" icon="settings" 
+		}
+
+		Text label="Meteo" icon="sun" {
+			Text item=Sunrise_Time
+			Text item=Sunset_Time
+			Text item=Weather_Temperature
+			Text item=Weather_Wind_Speed
+			Text item=Weather_Humidity
+			Text item=Weather_Pressure
+		}
+	}
+		
+	Frame {
+		Group item=gSoftware label="Software status" icon="network"
+		Group item=gPresence label="Presence" icon="present"
+	}
+	
+	Frame {
+			Group item=gEnergy label="Energy" icon="energy"
+			Group item=gEnergyAggregates label="Energy Aggregates" icon="energy"
+	}
+	
+	Frame {
+		Group label="Graphs" icon="energy" {
+			Chart item=powerGraph period=3D refresh=60000 service="mysql"
+		}
+	}
+}

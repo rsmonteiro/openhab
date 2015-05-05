@@ -1,0 +1,1 @@
+My config for OpenHAB 1.7 (snapshot)

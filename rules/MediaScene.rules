@@ -1,0 +1,29 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.joda.time.*
+
+rule "KodiLivingroomPlay"
+when
+        Item XmbcLivingroom_State changed to Play
+then
+		sendCommand(MediaScene, ON)	
+		sendCommand(SonosLivingroom_State, OFF)
+
+        if (now.isAfter((Sunset_Time.state as DateTimeType).calendar.timeInMillis) {
+			//turn off light
+			if(Power_Powerbar2.state > 10) {
+				sendCommand(Switch_Powerbar2, OFF)
+			}
+        }
+end
+
+rule "KodiLivingroomPause"
+when
+        Item XmbcLivingroom_State changed from Play to Pause or
+		Item XmbcLivingroom_State changed from Play to End or
+		Item XmbcLivingroom_State changed from Play to Stop
+then
+		sendCommand(MediaScene, OFF)
+		sendCommand(Switch_Powerbar2, ON)
+end

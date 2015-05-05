@@ -1,0 +1,19 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.joda.time.*
+
+rule "LeonArrivesHome"
+when
+        Item Presence_Leon_Home changed to ON
+then
+        sendCommand("SonosLivingroom_PlayUri" , "x-rincon-mp3radio://translate.google.com/translate_tts?tl=nl&q=Leon+komt+thuis")
+end
+
+rule "LeonLeavesWork"
+when
+        Item Presence_Leon_Work changed to OFF
+then
+        sendCommand("SonosLivingroom_PlayUri" , "x-rincon-mp3radio://translate.google.com/translate_tts?tl=nl&q=Leon+vertrekt+naar+huis")
+		sendNotification("gf@gmail.com", "Leon leaves work")
+end

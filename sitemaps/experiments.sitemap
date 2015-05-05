@@ -1,0 +1,12 @@
+sitemap experiments label="Experimenten"
+{
+	Frame {
+		Text item=Energy_TodaySmartmeter_Delivered
+		Text item=Energy_YesterdaySmartmeter_Delivered
+		
+		Text item=Energy_TodaySmartmeter_Produced
+		Text item=Energy_YesterdaySmartmeter_Produced
+		
+		Text item=Gas_TodaySmartmeter_Delivered
+	}
+}

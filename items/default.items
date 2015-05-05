@@ -1,0 +1,137 @@
+Group	All
+Group	gGroundFloor	(All)	
+Group	gFirstFloor	(All)	
+Group	gSecondFloor	(All)	
+Group	gSoftware	"Software services"	(All)	
+Group	gNetwork	"Network"	(All)	
+Group	gEnergy	"Energy"	(All)	
+Group   gEnergyAggregates "Energy Aggregates" (All)
+Group	gDebug	"Debug"	(All)	
+Group	gSonos	"Sonos"	(All)	
+Group	gLight	"Lights"	(All)	
+Group	gAstro	(All)	
+Group	SW_Networking	"Networking"	(gSoftware)	
+Group	SW_Downloads	"Downloads"	(gSoftware)	
+Group	SW_Server	"Server status"	(gSoftware)	
+Group 	gWeather (All)
+Group 	gBattery (All)
+Group   powerGraph (All)
+
+
+Number	Server_Load	"CPU usage [%.1f]"	(SW_Server)		{ systeminfo="CpuCombined:5000" }
+Number	Server_Memory	"Memory usage [%.1f]"	(SW_Server)		{ systeminfo="MemUsed:5000" }
+String	Server_Uptime	"Uptime [%s]"	(SW_Server)		{ systeminfo="UptimeFormatted:5000" }
+Switch	Downloads_Sickbeard	"Sickbeard"	(SW_Downloads)		{ nh="jupiter.irisvallei.local:8081" }
+Switch	Downloads_Sabnzbd	"Sabnzbd"	(SW_Downloads)		{ nh="jupiter.irisvallei.local:8080" }
+Switch	Downloads_Transmission	"Transmission"	(SW_Downloads)		{ nh="jupiter.irisvallei.local:9091" }
+Switch	Networking_EdgeRouter	"Router"	(SW_Networking)		{ nh="192.168.1.1:80" }
+Switch	Networking_UnifiController	"Unifi Controller"	(SW_Networking)		{ nh="mars.irisvallei.local:8443" }
+Number	WanPortIn	"Internet traffic incoming [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.10.2:10000]" }
+Number	WanPortOut	"Internet traffic outgoing [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.16.2:10000]" }
+Number	LanPortIn	"LAN traffic incoming [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.10.3:10000]" }
+Number	LanPortOut	"LAN traffic outgoing [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.16.3:10000]" }
+Number	VpnIn	"OpenVPN traffic incoming [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.10.15:10000]" }
+Number	VpnOut	"OpenVPN traffic outgoing [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.16.15:10000]" }
+
+Group	gPresence	"Presence"	(All)	
+Switch	Presence_Leon_Home	"Leon @ Home"	(gPresence)		{ mqttitude="local:owntracks/leong/5s:Home" }
+Switch	Presence_Leon_Work	"Leon @ Work"	(gPresence)		{ mqttitude="local:owntracks/leong/5s:Work" }
+
+Group	gUtility	"Utility"	(All)	
+Number	Power_Smartmeter_Delivered	"Total power currently delivered [%.3f KW]"	(gEnergy,gUtility,powerGraph)		{ dsmr="eActualDelivery" }
+Number	Power_Smartmeter_Produced	"Total power currently produced [%.3f KW]"	(gEnergy,gUtility)		{ dsmr="eActualProduction" }
+Number	Energy_HighSmartmeter_Delivered	"Total power delivered high tariff [%.3f KWh]"	(gEnergy,gUtility)		{ dsmr="eDeliveryTariff2" }
+Number	Energy_LowSmartmeter_Delivered	"Total power delivered low tariff [%.3f KWh]"	(gEnergy,gUtility)		{ dsmr="eDeliveryTariff1" }
+Number	Energy_HighSmartmeter_Produced	"Total power produced high tariff [%.3f KWh]"	(gEnergy,gUtility)		{ dsmr="eProductionTariff2" }
+Number	Energy_LowSmartmeter_Produced	"Total power produced low tariff [%.3f KWh]"	(gEnergy,gUtility)		{ dsmr="eProductionTariff1" }
+Number	Gas_Smartmeter	"Total gas delivered [%.3f m3]"	<gas>	(gEnergy,gUtility)		{ dsmr="gValue" }
+
+/* first floor */
+Switch	NightstandLight_Power	"Nightstand lamp"	(gFirstFloor,gLight)		{ hue="2" }
+Dimmer	NightstandLight_Dimm	"Nightstand lamp dimm"	(gFirstFloor,gLight)		{ hue="2;brightness;30" }
+Switch	SamsungTV	"TV Bedroom"	(gFirstFloor)		{ samsungtv="ON:bedroom:KEY_POWERON, OFF:bedroom:KEY_POWEROFF", nh="192.168.1.4:55000" }
+Switch	mute	(gFirstFloor)		{ samsungtv="ON:bedroom:KEY_MUTE, OFF:bedroom:KEY_MUTE" }
+Rollershutter	volume	(gFirstFloor)		{ samsungtv="UP:bedroom:KEY_VOLUP, DOWN:bedroom:KEY_VOLDOWN" }
+Switch	KodiBedroom_Power	"Kodi Bedroom"	(gFirstFloor)		{ xbmc=">[bedroompi2|System.Shutdown]", wol="192.168.1.0#e8:4e:06:15:00:b2", nh="bedroompi2:80" }
+String	KodiBedroom_State	"Kodi Bedroom state [%s]"	(gFirstFloor)		{ xbmc="<[bedroompi2|Player.State]" }
+String	KodiBedroom_Type	"Kodi Bedroom type [%s]"	(gFirstFloor)		{ xbmc="<[bedroompi2|Player.Type]" }
+String	KodiBedroom_Title	"Kodi Bedroom title [%s]"	(gFirstFloor)		{ xbmc="<[bedroompi2|Player.Title]" }
+String	KodiBedroom_ShowTitle	"Kodi Bedroom show title [%s]"	(gFirstFloor)		{ xbmc="<[bedroompi2|Player.ShowTitle]" }
+Switch	Switch_Powernode1	"Powernode"	(gFirstFloor)		{ zwave="5:command=switch_binary" }
+Number	Power_Powernode1	"Powernode power consumption  [%.2f W]"	(gFirstFloor,gEnergy,powerGraph)		{ zwave="5:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Energy_Powernode1	"Powernode total energy usage  [%.4f KWh]"	(gFirstFloor,gEnergy)		{ zwave="5:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+
+/* ground floor */
+Switch	KodiLivingroom_Power	"Kodi Livingroom"	(gGroundFloor)		{ xbmc=">[livingroomnuc|System.Shutdown]", wol="192.168.1.0#c0:3f:d5:65:5f:f1", nh="livingroomnuc:80" }
+String	KodiLivingroom_State	"Kodi Livingroom state [%s]"	(gGroundFloor)		{ xbmc="<[livingroomnuc|Player.State]" }
+String	KodiLivingroom_Type	"Kodi Livingroom type [%s]"	(gGroundFloor)		{ xbmc="<[livingroomnuc|Player.Type]" }
+String	KodiLivingroom_Title	"Kodi Livingroom title [%s]"	(gGroundFloor)		{ xbmc="<[livingroomnuc|Player.Title]" }
+String	KodiLivingroom_ShowTitle	"Kodi Livingroom show title [%s]"	(gGroundFloor)		{ xbmc="<[livingroomnuc|Player.ShowTitle]" }
+Switch	SonosLivingroom_State	"Sonos Play:1 Livingroom"	(gGroundFloor,gSonos)		{ sonos="[ON:living:play],[OFF:living:pause]" }
+String	SonosLivingroom_Track	"Sonos Play:1 Livingroom track [%s]"	(gGroundFloor,gSonos)		{ sonos="[living:currenttrack]" }
+String	SonosLivingroom_Artist	"Sonos Play:1 Livingroom artist [%s]"	(gGroundFloor,gSonos)		{ sonos="[living:currentartist]" }
+String	SonosLivingroom_Title	"Sonos Play:1 Livingroom title [%s]"	(gGroundFloor,gSonos)		{ sonos="[living:currenttitle]" }
+String  SonosLivingroom_PlayUri {sonos="[living:playuri]"}
+Switch	Switch_CornerLamp	"Lamp corner"	(gGroundFloor)		{ zwave="3:2" }
+Switch	Switch_MiddleLamp	"Lamp ceiling middle"	(gGroundFloor)		{ zwave="3" }
+Switch	TVLight_Power	"TV lamp"	(gGroundFloor,gLight)		{ hue="1" }
+Dimmer	TVLight_Dimm	"TV lamp dimm"	(gGroundFloor,gLight)		{ hue="1;brightness;30" }
+Switch	Switch_Powerbar1	"Playstation 3"	(gGroundFloor)		{ zwave="6:1:command=switch_binary" }
+Switch	Switch_Powerbar2	"Lamp"	(gGroundFloor)		{ zwave="6:2:command=switch_binary" }
+Switch	Switch_Powerbar3	"TV"	(gGroundFloor)		{ zwave="6:3:command=switch_binary" }
+Switch	Switch_Powerbar4	"Remote dock"	(gGroundFloor)		{ zwave="6:4:command=switch_binary" }
+Switch	Switch_Powerbar5	"Humax PVR"	(gGroundFloor)		{ zwave="6:5:command=switch_binary" }
+Switch	Switch_Powerbar6	"NUC"	(gGroundFloor)		{ zwave="6:6:command=switch_binary" }
+Number	Power_Powerbar1	"Playstation 3 power consumption [%.2f W]"	(gGroundFloor,gEnergy)		{ zwave="6:1:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Powerbar2	"Lamp power consumption [%.2f W]"	(gGroundFloor,gEnergy)		{ zwave="6:2:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Powerbar3	"TV power consumption [%.2f W]"	(gGroundFloor,gEnergy)		{ zwave="6:3:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Powerbar4	"Remote dock power consumption [%.2f W]"	(gGroundFloor,gEnergy)		{ zwave="6:4:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Powerbar5	"Humax PVR power consumption [%.2f W]"	(gGroundFloor,gEnergy)		{ zwave="6:5:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Powerbar6	"NUC power consumption [%.2fW]"	(gGroundFloor,gEnergy)		{ zwave="6:6:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Dishwasher	"Dishwasher power consumption [%.2f W]"	(gGroundFloor,gEnergy,powerGraph)		{ zwave="7:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Freezer	"Freezer power consumption [%.2f W]"	(gGroundFloor,gEnergy,powerGraph)		{ zwave="9:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Energy_Powerbar1	"Playstation 3 total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="6:1:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Powerbar2	"Lamp total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="6:2:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Powerbar3	"TV total total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="6:3:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Powerbar4	"Remote dock total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="6:4:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Powerbar5	"Humax PVR total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="6:5:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Powerbar6	"NUC total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="6:6:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Dishwasher	"Dishwasher total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="7:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Freezer	"Freezer total energy usage [%.4f KWh]"	(gGroundFloor,gEnergy)		{ zwave="9:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Contact	Contact_Frontdoor	"Front door is [%s]"	(gGroundFloor)		{ zwave="14:command=sensor_binary,respond_to_basic=true" }
+Number  Frontdoor_Battery "Front door sensor battery [%s %%]" (gGroundFloor,gBattery) { zwave="14:command=BATTERY" }
+Switch  Doorbell_Event    "Doorbell" (gGroundFloor) { mqtt="<[local:/home/doorbell:command:ON]" }
+
+/* 2nd floor */
+Number	Power_Washingmachine	"Washingmachine power consumption [%.2f W]"	(gSecondFloor,gEnergy,powerGraph)		{ zwave="8:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Power_Dryer	"Dryer power consumption [%.2f W]"	(gSecondFloor,gEnergy,powerGraph)		{ zwave="11:command=meter,meter_scale=E_W,refresh_interval=30" }
+Number	Energy_Washingmachine	"Washingmachine total energy usage [%.4f KWh]"	(gSecondFloor,gEnergy)		{ zwave="8:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+Number	Energy_Dryer	"Dryer total energy usage [%.4f KWh]"	(gSecondFloor,gEnergy)		{ zwave="11:command=meter,meter_scale=E_KWh,refresh_interval=300" }
+
+/* astro */
+DateTime	Sunrise_Time	"Sunrise [%1$tH:%1$tM]"	<sunrise>	(gAstro)		{ astro="planet=sun, type=rise, property=start, offset=0" }
+DateTime	Sunset_Time	"Sunset [%1$tH:%1$tM]"	<sunrise>	(gAstro)		{ astro="planet=sun, type=set, property=start, offset=-15" }
+Number	Azimuth	"Azimuth [%.2f]"	(gAstro)		{ astro="planet=sun, type=position, property=azimuth" }
+Number	Elevation	"Elevation [%.2f]"	(gAstro)		{ astro="planet=sun, type=position, property=elevation" }
+Switch	Sunrise_Event	"Sunrise"	<sunrise>	(gAstro)		{ astro="planet=sun, type=rise, property=start, offset=0" }
+Switch	Sunset_Event	"Sunset"	<sunrise>	(gAstro)		{ astro="planet=sun, type=set, property=start, offset=-15" }
+
+/* weather */
+Number	Weather_Temperature	"Temperature outside [%.1f °C]"	<temperature>	(gWeather)		{ http="<[openweathermap:300000:XSLT(openweathermap.org_temperature.xsl)]" }
+Number	Weather_Temp_Max	"Temp. outside Max [%.1f °C]"	<temperature>	(gWeather)		{ http="<[openweathermap:300000:XSLT(openweathermap.org_temperature_high.xsl)]" }
+Number	Weather_Temp_Min	"Temp. outside Min [%.1f °C]"	<temperature>	(gWeather)		{ http="<[openweathermap:300000:XSLT(openweathermap.org_temperature_low.xsl)]" }
+Number	Weather_Wind_Speed	"Windspeed [%.1f m/s]"	<wind>	(gWeather)		{ http="<[openweathermap:300000:XSLT(openweathermap.org_wind_speed.xsl)]" }
+Number	Weather_Humidity	"Humidity outside [%.1f %%]"	<humidity>	(gWeather)		{ http="<[openweathermap:300000:XSLT(openweathermap.org_humidity.xsl)]" }
+Number	Weather_Pressure	"Air pressure outside [%.1f hPa]"	<temperature>	(gWeather)		{ http="<[openweathermap:300000:XSLT(openweathermap.org_pressure.xsl)]" }
+
+/* items to store aggregate values */
+Number	Energy_TodaySmartmeter_Delivered "Today total energy usage [%.4f KWh]" (gEnergyAggregates)
+Number	Energy_YesterdaySmartmeter_Delivered "Yesterday total energy usage [%.4f KWh]" (gEnergyAggregates)
+Number	Energy_TodaySmartmeter_Produced	 "Today total energy production [%.4f KWh]" (gEnergyAggregates)
+Number	Energy_YesterdaySmartmeter_Produced "Yesterday total energy production [%.4f KWh]" (gEnergyAggregates)
+Number	Gas_TodaySmartmeter_Delivered "Today gas usage [%.3f m3]" (gEnergyAggregates)
+
+/* scene switches */
+Switch NightScene "Gone to bed"
+Switch AwakeScene "Awake and about"
+Switch MediaScene "Watching TV downstairs"

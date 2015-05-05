@@ -1,0 +1,15 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+		
+rule "NotifyOnFrontdoor"
+when 
+	Item Contact_Frontdoor changed to "OPENED" 
+then 
+	if(Presence_Leon_Home.state == OFF &&
+		now.GetDayOfWeek() != 1 &&
+		now.GetDayOfWeek() != 5) 
+	{
+		sendNotification("me@gmail.com", "Front door is opened")
+	}
+end

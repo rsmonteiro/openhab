@@ -1,0 +1,23 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+		
+rule "NotifyOnDoorbell"
+when 
+	Item Doorbell_Event changed from OFF to ON
+then 
+	sendNotification("me@gmail.com", "Doorbell has rung")
+	sendNotification("gf@gmail.com", "Doorbell has rung")
+	
+	if(MediaScene.state == ON) {
+		sendCommand(KodiLivingroom_State, Pause)
+		
+		sendXbmcNotification("livingroomnuc", 80, "Doorbell", "Playback suspended")
+	}
+	
+	//turn doorbell off a bit later to prevent duplicate notifications
+	timer = createTimer(now.plusSeconds(4)) [|
+                sendCommand(Doorbell_Event, OFF)
+            ]
+	
+end

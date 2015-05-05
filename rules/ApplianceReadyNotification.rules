@@ -1,0 +1,85 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+import org.joda.time.*
+
+var Boolean bDishwasher = false
+var Timer tDishwasher = null
+
+rule "DishwasherReady"
+when
+        Item Power_Dishwasher received update
+then
+        if (Power_Dishwasher.state > 10) {
+                if (bDishwasher == false) {
+                        bDishwasher = true
+                }
+                if (tDishwasher != null) {
+                        tDishwasher.cancel
+                        tDishwasher = null
+                }
+        } else if (Power_Dishwasher.state <= 2 && bDishwasher == true && tDishwasher == null) {
+                tDishwasher = createTimer(now.plusMinutes(2)) [|
+                        bDishwasher = false
+                        tDishwasher = null
+
+						sendNotification("me@gmail.com", "Dishwasher is done")
+						sendNotification("gf@gmail.com", "Dishwasher is done")
+                ]
+        }
+end
+
+var Boolean bWashingmachine = false
+var Timer tWashingmachine = null
+
+rule "WashingmachineReady"
+when
+        Item Power_Washingmachine received update
+then
+        if (Power_Washingmachine.state > 10) {
+                if (bWashingmachine == false) {
+						logInfo("WashingmachineReady", "Washingmachine started")
+                        bWashingmachine = true
+                }
+                if (tWashingmachine != null) {
+                        tWashingmachine.cancel
+                        tWashingmachine = null
+                }
+        } else if (Power_Washingmachine.state <= 4 && bWashingmachine == true && tWashingmachine == null) {
+				logInfo("WashingmachineReady", "Washingmachine low power detected")
+                tWashingmachine = createTimer(now.plusMinutes(2)) [|
+						logInfo("WashingmachineReady", "Washingmachine done")
+                        bWashingmachine = false
+                        tWashingmachine = null
+
+						sendNotification("me@gmail.com", "Washingmachine is done")
+						sendNotification("gf@gmail.com", "Washingmachine is done")
+                ]
+        }
+end
+
+var Boolean bDryer = false
+var Timer tDryer = null
+
+rule "DryerReady"
+when
+        Item Power_Dryer received update
+then
+        if (Power_Dryer.state > 10) {
+                if (bDryer == false) {
+                        bDryer = true
+                }
+                if (tDryer != null) {
+                        tDryer.cancel
+                        tDryer = null
+                }
+        } else if (Power_Dryer.state <= 2 && bDryer == true && tDryer == null) {
+                tDryer = createTimer(now.plusMinutes(2)) [|
+                        bDryer = false
+                        tDryer = null
+
+						sendNotification("me@gmail.com", "Dryer is done")
+						sendNotification("gf@gmail.com", "Dryer is done")
+                ]
+        }
+end
