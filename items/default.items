@@ -21,11 +21,11 @@ Group   powerGraph (All)
 Number	Server_Load	"CPU usage [%.1f]"	(SW_Server)		{ systeminfo="CpuCombined:5000" }
 Number	Server_Memory	"Memory usage [%.1f]"	(SW_Server)		{ systeminfo="MemUsed:5000" }
 String	Server_Uptime	"Uptime [%s]"	(SW_Server)		{ systeminfo="UptimeFormatted:5000" }
-Switch	Downloads_Sickbeard	"Sickbeard"	(SW_Downloads)		{ nh="jupiter.irisvallei.local:8081" }
-Switch	Downloads_Sabnzbd	"Sabnzbd"	(SW_Downloads)		{ nh="jupiter.irisvallei.local:8080" }
-Switch	Downloads_Transmission	"Transmission"	(SW_Downloads)		{ nh="jupiter.irisvallei.local:9091" }
+Switch	Downloads_Sickbeard	"Sickbeard"	(SW_Downloads)		{ nh="jupiter.domain.local:8081" }
+Switch	Downloads_Sabnzbd	"Sabnzbd"	(SW_Downloads)		{ nh="jupiter.domain.local:8080" }
+Switch	Downloads_Transmission	"Transmission"	(SW_Downloads)		{ nh="jupiter.domain.local:9091" }
 Switch	Networking_EdgeRouter	"Router"	(SW_Networking)		{ nh="192.168.1.1:80" }
-Switch	Networking_UnifiController	"Unifi Controller"	(SW_Networking)		{ nh="mars.irisvallei.local:8443" }
+Switch	Networking_UnifiController	"Unifi Controller"	(SW_Networking)		{ nh="mars.domain.local:8443" }
 Number	WanPortIn	"Internet traffic incoming [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.10.2:10000]" }
 Number	WanPortOut	"Internet traffic outgoing [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.16.2:10000]" }
 Number	LanPortIn	"LAN traffic incoming [%.0f]"	(SW_Networking)		{ snmp="<[192.168.1.1:public:.1.3.6.1.2.1.2.2.1.10.3:10000]" }
