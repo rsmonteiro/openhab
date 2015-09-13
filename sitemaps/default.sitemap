@@ -1,4 +1,4 @@
-sitemap default label="Irisvallei 12"
+sitemap default label="Default Sitemap"
 {
 	Frame {
 		Text label="Floors" icon="house" {
